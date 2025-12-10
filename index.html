@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -169,6 +168,7 @@
       const input = document.getElementById('searchInput');
       input.focus();
     });
+
     const subdomains = [
       "works", "say", "nikki", "kakuka", "taiso", "bft41",
       "heatmap", "rss", "lists", "pick25", "icsfilter", "ytt",
@@ -177,43 +177,47 @@
     const input = document.getElementById('searchInput');
     const suggestions = document.getElementById('suggestions');
     let selectedIndex = -1;
-    let autoNavigateTimeout = null;
+
     input.addEventListener('input', updateSuggestions);
     input.addEventListener('keydown', handleKeyDown);
+
     function updateSuggestions() {
-      clearTimeout(autoNavigateTimeout);
       const query = input.value.toLowerCase();
       suggestions.innerHTML = '';
       selectedIndex = -1;
+
       if (query.length === 0) {
         suggestions.style.display = 'none';
         return;
       }
+
       const matches = subdomains.filter(domain =>
         domain.includes(query)
       ).sort((a, b) => a.indexOf(query) - b.indexOf(query));
+
       if (matches.length === 0) {
         suggestions.style.display = 'none';
         return;
       }
+
       matches.forEach((match) => {
         const item = document.createElement('div');
         const matchText = highlightMatch(match, query);
         item.innerHTML = matchText;
         item.className = 'suggestion-item';
         item.addEventListener('click', () => {
-          clearTimeout(autoNavigateTimeout);
           navigateTo(match);
         });
         suggestions.appendChild(item);
       });
+
       suggestions.style.display = 'block';
-      if (matches.length === 1 && matches[0] === query) {
-        autoNavigateTimeout = setTimeout(() => {
-          navigateTo(matches[0]);
-        }, 1200);
+
+      if (matches.length === 1) {
+        navigateTo(matches[0]);
       }
     }
+
     function highlightMatch(text, query) {
       const index = text.toLowerCase().indexOf(query);
       if (index === -1) return text;
@@ -222,25 +226,25 @@
       const end = text.substring(index + query.length);
       return `${start}<span class="highlight">${match}</span>${end}`;
     }
+
     function handleKeyDown(e) {
       const items = suggestions.querySelectorAll('.suggestion-item');
       if (items.length === 0) return;
+
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        clearTimeout(autoNavigateTimeout);
         selectedIndex = (selectedIndex + 1) % items.length;
         updateSelection();
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        clearTimeout(autoNavigateTimeout);
         selectedIndex = (selectedIndex - 1 + items.length) % items.length;
         updateSelection();
       } else if (e.key === 'Enter' && selectedIndex >= 0) {
         e.preventDefault();
-        clearTimeout(autoNavigateTimeout);
         navigateTo(items[selectedIndex].textContent);
       }
     }
+
     function updateSelection() {
       const items = suggestions.querySelectorAll('.suggestion-item');
       items.forEach((item, index) => {
@@ -252,13 +256,14 @@
         }
       });
     }
+
     function navigateTo(subdomain) {
       window.location.href = `https://${subdomain}.poet.blue`;
     }
+
     document.addEventListener('click', (e) => {
       if (e.target !== input) {
         suggestions.style.display = 'none';
-        clearTimeout(autoNavigateTimeout);
       }
     });
   </script>
