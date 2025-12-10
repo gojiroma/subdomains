@@ -3,144 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>サブドメインインクリメンタルサーチ</title>
+  <title>poet.blue</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80' text-anchor='middle' x='50'>📝</text></svg">
   <style>
     :root {
       --primary: #4361ee;
       --secondary: #3f37c9;
       --text: #2b2d42;
       --light: #f8f9fa;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --transition: all 0.2s ease;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       --highlight: #ff8c00;
+      --glow: 0 0 16px rgba(67, 97, 238, 0.3);
     }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Helvetica Neue', 'Noto Sans JP', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: linear-gradient(135deg, #f0f4ff 0%, #d9e6ff 100%);
       padding: 20px;
+      color: var(--text);
     }
-
     .container {
       width: 100%;
       max-width: 500px;
       position: relative;
+      animation: fadeIn 0.6s ease-out;
     }
-
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .search-box {
       position: relative;
       width: 100%;
     }
-
     .search-wrapper {
       display: flex;
       align-items: center;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
     }
-
+    .search-wrapper:focus-within {
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2), var(--shadow);
+    }
     .search-input {
       width: calc(100% - 100px);
       font-size: 1.5rem;
-      padding: 16px 20px;
-      border: 2px solid #e9ecef;
-      border-radius: 8px 0 0 0;
+      padding: 18px 24px;
+      border: none;
       outline: none;
-      transition: var(--transition);
-      background: white;
-      box-shadow: var(--shadow);
+      background: transparent;
       font-weight: 400;
-      color: var(--text);
       text-align: right;
+      letter-spacing: 0.5px;
     }
-
-    .search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-      border-radius: 8px 0 0 0;
-      z-index: 2;
-      position: relative;
-    }
-
     .suffix {
       font-size: 1.5rem;
-      color: #8b95a8;
-      padding: 16px 20px;
-      background: white;
-      border: 2px solid #e9ecef;
-      border-left: none;
-      border-radius: 0 8px 0 0;
-      box-shadow: var(--shadow);
-      position: relative;
-      z-index: 1;
+      color: #6c757d;
+      padding: 18px 24px;
+      background: rgba(67, 97, 238, 0.05);
+      font-weight: 300;
+      letter-spacing: 1px;
     }
-
-.suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: calc(100% - 146px); /* inputと同じ幅にする */
-    background: white;
-    border: 1px solid #e9ecef;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    max-height: 320px;
-    overflow-y: auto;
-    z-index: 1000;
-    box-shadow: var(--shadow);
-    display: none;
-  }
-
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: calc(100% - 164px);
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 320px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+      display: none;
+      margin-top: 4px;
+    }
     .suggestion-item {
-      padding: 12px 20px;
+      padding: 14px 24px;
       font-size: 1.1rem;
       cursor: pointer;
       color: var(--text);
       transition: var(--transition);
       text-align: right;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     }
-
     .suggestion-item:hover, .suggestion-item.selected {
-      background: rgba(67, 97, 238, 0.1);
-    }
-
-    .suggestion-item:hover {
+      background: rgba(67, 97, 238, 0.08);
       color: var(--primary);
     }
-
     .suggestion-item.selected {
-      background: rgba(67, 97, 238, 0.2);
+      background: rgba(67, 97, 238, 0.16);
       font-weight: 500;
     }
-
     .suggestion-item:last-child {
       border-bottom: none;
     }
-
     .suggestion-item::before {
-      content: "⚡";
+      content: "✨";
       opacity: 0;
       transition: var(--transition);
-      margin-right: 10px;
+      margin-right: 12px;
       float: left;
+      font-size: 1.1em;
     }
-
     .suggestion-item:hover::before,
     .suggestion-item.selected::before {
       opacity: 1;
     }
-
     .highlight {
       color: var(--highlight);
-      font-weight: bold;
+      font-weight: 600;
+      text-shadow: var(--glow);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text: #f8f9fa;
+        --light: #212529;
+      }
+      body {
+        background: linear-gradient(135deg, #1a1d29 0%, #2d3748 100%);
+      }
+      .search-wrapper {
+        background: #2d3748;
+      }
+      .search-input, .suffix {
+        color: #f8f9fa;
+      }
+      .suggestions {
+        background: #2d3748;
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      .suggestion-item {
+        border-color: rgba(255, 255, 255, 0.08);
+      }
     }
   </style>
 </head>
@@ -148,48 +157,44 @@
   <div class="container">
     <div class="search-box">
       <div class="search-wrapper">
-        <input type="text" class="search-input" id="searchInput" autocomplete="off" placeholder="サブドメインを入力">
+        <input type="text" class="search-input" id="searchInput" autocomplete="off" placeholder="サブドメインを検索...">
         <span class="suffix">.poet.blue</span>
       </div>
       <div class="suggestions" id="suggestions"></div>
     </div>
   </div>
-
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('searchInput');
+      input.focus();
+    });
     const subdomains = [
       "works", "say", "nikki", "kakuka", "taiso", "bft41",
       "heatmap", "rss", "lists", "pick25", "icsfilter", "ytt",
       "bonyari", "opmlfilter", "okanekazoe", "gyazosum", "gahaku", "bm", "subsc", "fasterclock"
     ];
-
     const input = document.getElementById('searchInput');
     const suggestions = document.getElementById('suggestions');
     let selectedIndex = -1;
     let autoNavigateTimeout = null;
-
     input.addEventListener('input', updateSuggestions);
     input.addEventListener('keydown', handleKeyDown);
-
     function updateSuggestions() {
       clearTimeout(autoNavigateTimeout);
       const query = input.value.toLowerCase();
       suggestions.innerHTML = '';
       selectedIndex = -1;
-
       if (query.length === 0) {
         suggestions.style.display = 'none';
         return;
       }
-
       const matches = subdomains.filter(domain =>
         domain.includes(query)
-      );
-
+      ).sort((a, b) => a.indexOf(query) - b.indexOf(query));
       if (matches.length === 0) {
         suggestions.style.display = 'none';
         return;
       }
-
       matches.forEach((match) => {
         const item = document.createElement('div');
         const matchText = highlightMatch(match, query);
@@ -201,32 +206,24 @@
         });
         suggestions.appendChild(item);
       });
-
       suggestions.style.display = 'block';
-
-      if (matches.length === 1) {
-        input.value = matches[0];
+      if (matches.length === 1 && matches[0] === query) {
         autoNavigateTimeout = setTimeout(() => {
           navigateTo(matches[0]);
-        }, 2000);
+        }, 1200);
       }
     }
-
     function highlightMatch(text, query) {
       const index = text.toLowerCase().indexOf(query);
       if (index === -1) return text;
-
       const start = text.substring(0, index);
       const match = text.substring(index, index + query.length);
       const end = text.substring(index + query.length);
-
       return `${start}<span class="highlight">${match}</span>${end}`;
     }
-
     function handleKeyDown(e) {
       const items = suggestions.querySelectorAll('.suggestion-item');
       if (items.length === 0) return;
-
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         clearTimeout(autoNavigateTimeout);
@@ -243,7 +240,6 @@
         navigateTo(items[selectedIndex].textContent);
       }
     }
-
     function updateSelection() {
       const items = suggestions.querySelectorAll('.suggestion-item');
       items.forEach((item, index) => {
@@ -255,11 +251,9 @@
         }
       });
     }
-
     function navigateTo(subdomain) {
       window.location.href = `https://${subdomain}.poet.blue`;
     }
-
     document.addEventListener('click', (e) => {
       if (e.target !== input) {
         suggestions.style.display = 'none';
