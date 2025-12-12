@@ -7,8 +7,6 @@
   <title>poet.blue</title>
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80' text-anchor='middle' x='50'>📝</text></svg">
-
-
 </head>
 
 <body>
@@ -21,7 +19,6 @@
       <div class="suggestions" id="suggestions"></div>
     </div>
   </div>
-
 </body>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -34,7 +31,7 @@
     "heatmap", "rss", "lists", "pick25", "icsfilter", "ytt",
     "bonyari", "opmlfilter", "okanekazoe", "gyazosum", "gahaku", "bm", "subsc", "fasterclock",
     "eiga", "yonda", "new", "sh", "gh", "chat", "editsubdomains", "rururu", "captures", "mail",
-    "playstorerandom", "nitterandom", "idobata", "reqr", "countdown","create"
+    "playstorerandom", "nitterandom", "idobata", "reqr", "countdown","create","vercel","radio","bank","card","kabu","books","denki","gas"
   ];
   const input = document.getElementById('searchInput');
   const suggestions = document.getElementById('suggestions');
@@ -91,8 +88,6 @@
 
   function handleKeyDown(e) {
     const items = suggestions.querySelectorAll('.suggestion-item');
-    if (items.length === 0) return;
-
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       selectedIndex = (selectedIndex + 1) % items.length;
@@ -101,9 +96,13 @@
       e.preventDefault();
       selectedIndex = (selectedIndex - 1 + items.length) % items.length;
       updateSelection();
-    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+    } else if (e.key === 'Enter') {
       e.preventDefault();
-      navigateTo(items[selectedIndex].textContent);
+      if (selectedIndex >= 0 && items.length > 0) {
+        navigateTo(items[selectedIndex].textContent);
+      } else if (input.value.trim() !== '') {
+        window.location.href = `https://www.google.com/search?q=${encodeURIComponent(input.value)}&btnI`;
+      }
     }
   }
 
