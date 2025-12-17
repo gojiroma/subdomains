@@ -157,20 +157,6 @@
       text-shadow: var(--glow);
     }
 
-    .redirect-counter {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      font-size: 0.8rem;
-      color: #6c757d;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 4px 8px;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      transition: opacity 0.2s ease-in;
-    }
-
     @media (prefers-color-scheme: dark) {
       :root {
         --text: #f8f9fa;
@@ -198,11 +184,6 @@
       .suggestion-item {
         border-color: rgba(255, 255, 255, 0.08);
       }
-
-      .redirect-counter {
-        color: #adb5bd;
-        background: rgba(45, 55, 72, 0.8);
-      }
     }
   </style>
 </head>
@@ -216,13 +197,12 @@
       </div>
       <div class="suggestions" id="suggestions"></div>
     </div>
-    <div class="redirect-counter" id="redirectCounter"></div>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const input = document.getElementById('searchInput');
       input.focus();
-      setTimeout(updateCounterDisplay, 50);
+      updateTitleDisplay();
     });
 
     const subdomains = [
@@ -236,7 +216,6 @@
     ];
     const input = document.getElementById('searchInput');
     const suggestions = document.getElementById('suggestions');
-    const counterElement = document.getElementById('redirectCounter');
     let selectedIndex = -1;
 
     input.addEventListener('input', updateSuggestions);
@@ -320,16 +299,15 @@
       let redirects = JSON.parse(localStorage.getItem('redirects') || '{}');
       redirects[today] = (redirects[today] || 0) + 1;
       localStorage.setItem('redirects', JSON.stringify(redirects));
-      updateCounterDisplay();
+      updateTitleDisplay();
       window.location.href = `https://${subdomain}.poet.blue`;
     }
 
-    function updateCounterDisplay() {
+    function updateTitleDisplay() {
       const today = new Date().toISOString().split('T')[0];
       const redirects = JSON.parse(localStorage.getItem('redirects') || '{}');
       const count = redirects[today] || 0;
-      counterElement.textContent = `${count} redirects today`;
-      counterElement.style.opacity = '1';
+      document.title = `${count} redirects today | poet.blue`;
     }
 
     document.addEventListener('click', (e) => {
