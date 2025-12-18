@@ -3,20 +3,20 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>poet.blue</title>
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80' text-anchor='middle' x='50'>📝</text></svg">
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232c3e50'/%3E%3Ctext y='.9em' font-size='90' text-anchor='middle' x='50' fill='%23ffffff'%3E📝%3C/text%3E%3C/svg%3E"
+    type="image/svg+xml">
   <style>
     :root {
-      --primary: #4361ee;
-      --secondary: #3f37c9;
-      --text: #2b2d42;
-      --light: #f8f9fa;
-      --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      --highlight: #ff8c00;
-      --glow: 0 0 16px rgba(67, 97, 238, 0.3);
+      --primary: #2c3e50;
+      --secondary: #34495e;
+      --text: #5d6f81;
+      --light: #fafafa;
+      --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --transition: all 0.2s ease;
+      --highlight: #e74c3c;
     }
 
     * {
@@ -26,19 +26,20 @@
     }
 
     body {
-      font-family: 'Helvetica Neue', 'Noto Sans JP', sans-serif;
+      font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "BIZ UDGothic", sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #f0f4ff 0%, #d9e6ff 100%);
+      background-color: #fafafa;
       padding: 20px;
       color: var(--text);
+      line-height: 1.8;
     }
 
     .container {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       position: relative;
     }
 
@@ -51,57 +52,59 @@
       display: flex;
       align-items: center;
       background: white;
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
       box-shadow: var(--shadow);
       transition: var(--transition);
-    }
-
-    .search-wrapper:focus-within {
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2), var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .search-input {
-      width: calc(100% - 100px);
-      font-size: 1.5rem;
-      padding: 18px 24px;
+      flex: 1;
+      font-size: 18px;
+      padding: 18px 22px;
       border: none;
       outline: none;
       background: transparent;
       font-weight: 400;
       text-align: right;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.05em;
+      color: var(--text);
     }
 
     .suffix {
-      font-size: 1.5rem;
-      color: #6c757d;
-      padding: 18px 24px;
-      background: rgba(67, 97, 238, 0.05);
+      font-size: 18px;
+      color: #999;
+      padding: 18px 22px;
+      background: rgba(44, 62, 80, 0.03);
       font-weight: 300;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
     .suggestions {
       position: absolute;
       top: 100%;
       left: 0;
-      width: calc(100% - 164px);
+      width: 78%;
       background: white;
       border: 1px solid rgba(0, 0, 0, 0.08);
       border-top: none;
-      border-radius: 0 0 12px 12px;
-      max-height: 320px;
+      border-radius: 0 0 8px 8px;
+      max-height: 360px;
       overflow-y: auto;
       z-index: 1000;
       box-shadow: var(--shadow);
       display: none;
-      margin-top: 4px;
+      margin-top: 6px;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
     }
 
     .suggestion-item {
-      padding: 14px 24px;
-      font-size: 1.1rem;
+      padding: 14px 22px;
+      font-size: 16px;
       cursor: pointer;
       color: var(--text);
       transition: var(--transition);
@@ -111,12 +114,12 @@
 
     .suggestion-item:hover,
     .suggestion-item.selected {
-      background: rgba(67, 97, 238, 0.08);
+      background: rgba(44, 62, 80, 0.05);
       color: var(--primary);
     }
 
     .suggestion-item.selected {
-      background: rgba(67, 97, 238, 0.16);
+      background: rgba(44, 62, 80, 0.1);
       font-weight: 500;
     }
 
@@ -124,47 +127,33 @@
       border-bottom: none;
     }
 
-    .suggestion-item::before {
-      content: "✨";
-      opacity: 0;
-      transition: var(--transition);
-      margin-right: 12px;
-      float: left;
-      font-size: 1.1em;
-    }
-
-    .suggestion-item:hover::before,
-    .suggestion-item.selected::before {
-      opacity: 1;
-    }
-
     .highlight {
       color: var(--highlight);
       font-weight: 600;
-      text-shadow: var(--glow);
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --text: #f8f9fa;
-        --light: #212529;
+        --text: #ecf0f1;
+        --light: #2c3e50;
       }
 
       body {
-        background: linear-gradient(135deg, #1a1d29 0%, #2d3748 100%);
+        background-color: #2c3e50;
       }
 
       .search-wrapper {
-        background: #2d3748;
+        background: #34495e;
+        border-color: rgba(255, 255, 255, 0.1);
       }
 
       .search-input,
       .suffix {
-        color: #f8f9fa;
+        color: #ecf0f1;
       }
 
       .suggestions {
-        background: #2d3748;
+        background: #34495e;
         border-color: rgba(255, 255, 255, 0.1);
       }
 
@@ -236,7 +225,6 @@
       });
 
       suggestions.style.display = 'block';
-
       if (matches.length === 1) navigateTo(matches[0]);
     }
 
