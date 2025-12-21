@@ -253,7 +253,7 @@
         if (selectedIndex >= 0 && items.length > 0) {
           navigateTo(items[selectedIndex].textContent);
         } else if (input.value.trim() !== '') {
-          window.location.href = `https://www.google.com/search?q=${encodeURIComponent(input.value)}&btnI`;
+          window.open(`https://www.google.com/search?q=${encodeURIComponent(input.value)}&btnI`);
         }
       }
     }
@@ -276,7 +276,7 @@
       redirects[today] = (redirects[today] || 0) + 1;
       localStorage.setItem('redirects', JSON.stringify(redirects));
       updateTitleDisplay();
-      window.location.href = `https://${subdomain}.poet.blue`;
+      window.open(`https://${subdomain}.poet.blue`);
     }
 
     function updateTitleDisplay() {
