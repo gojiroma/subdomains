@@ -1,294 +1,121 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>poet.blue</title>
-  <link rel="icon" href="roll-icon.png" type="image/png">
-
-  <style>
-    :root {
-      --primary: #2c3e50;
-      --secondary: #34495e;
-      --text: #5d6f81;
-      --light: #fafafa;
-      --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      --transition: all 0.2s ease;
-      --highlight: #e74c3c;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "BIZ UDGothic", sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #fafafa;
-      padding: 20px;
-      color: var(--text);
-      line-height: 1.8;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      position: relative;
-    }
-
-    .search-box {
-      position: relative;
-      width: 100%;
-    }
-
-    .search-wrapper {
-      display: flex;
-      align-items: center;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: var(--transition);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    .search-input {
-      flex: 1;
-      font-size: 18px;
-      padding: 18px 22px;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-weight: 400;
-      text-align: right;
-      letter-spacing: 0.05em;
-      color: var(--text);
-    }
-
-    .suffix {
-      font-size: 18px;
-      color: #999;
-      padding: 18px 22px;
-      background: rgba(44, 62, 80, 0.03);
-      font-weight: 300;
-      letter-spacing: 0.5px;
-    }
-
-    .suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 78%;
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      max-height: 360px;
-      overflow-y: auto;
-      z-index: 1000;
-      box-shadow: var(--shadow);
-      display: none;
-      margin-top: 6px;
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-
-    .suggestion-item {
-      padding: 14px 22px;
-      font-size: 16px;
-      cursor: pointer;
-      color: var(--text);
-      transition: var(--transition);
-      text-align: right;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    }
-
-    .suggestion-item:hover,
-    .suggestion-item.selected {
-      background: rgba(44, 62, 80, 0.05);
-      color: var(--primary);
-    }
-
-    .suggestion-item.selected {
-      background: rgba(44, 62, 80, 0.1);
-      font-weight: 500;
-    }
-
-    .suggestion-item:last-child {
-      border-bottom: none;
-    }
-
-    .highlight {
-      color: var(--highlight);
-      font-weight: 600;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --text: #ecf0f1;
-        --light: #2c3e50;
-      }
-
-      body {
-        background-color: #2c3e50;
-      }
-
-      .search-wrapper {
-        background: #34495e;
-        border-color: rgba(255, 255, 255, 0.1);
-      }
-
-      .search-input,
-      .suffix {
-        color: #ecf0f1;
-      }
-
-      .suggestions {
-        background: #34495e;
-        border-color: rgba(255, 255, 255, 0.1);
-      }
-
-      .suggestion-item {
-        border-color: rgba(255, 255, 255, 0.08);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>リンク集</title>
+    <style>
+        @import url('https://fonts.googleapis.com/earlyaccess/notosansjapanese.css');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            font-family: 'Noto Serif JP', serif;
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+        #grid-container {
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 0;
+        }
+        .tile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 4vmin, 3rem);
+            cursor: pointer;
+            text-decoration: none;
+            user-select: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            width: 100%;
+            height: 100%;
+        }
+        .tile:hover {
+            transform: scale(0.98);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            .tile {
+                font-size: clamp(1rem, 5vmin, 2rem);
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <div class="search-box">
-      <div class="search-wrapper">
-        <input type="text" class="search-input" id="searchInput" autocomplete="off" placeholder="サブドメインを検索...">
-        <span class="suffix">.poet.blue</span>
-      </div>
-      <div class="suggestions" id="suggestions"></div>
-    </div>
-  </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('searchInput');
-      input.focus();
-      updateTitleDisplay();
-    });
+    <div id="grid-container"></div>
+    <script>
+        const baseUrl = 'https://poet.blue';
+        const tiles = [
+            { char: '作', subdomain: 'works' },
+            { char: '言', subdomain: 'say' },
+            { char: '記', subdomain: 'nikki' },
+            { char: '日', subdomain: 'kakuka' },
+            { char: '書', subdomain: 'write' },
+            { char: '体', subdomain: 'taiso' },
+            { char: '本', subdomain: 'heatmap' },
+            { char: '椎', subdomain: 'sh' },
+            { char: '茶', subdomain: 'chat' },
+            { char: '流', subdomain: 'rururu' },
+            { char: '脚', subdomain: 'capture' },
+            { char: '暮', subdomain: 'card' },
+            { char: '熊', subdomain: 'aeon-cinema' },
+            { char: '深', subdomain: 'fukaya-cinema' },
+            { char: '淀', subdomain: 'yodobashi' },
+            { char: '冠', subdomain: 'ct21' },
+            { char: '図', subdomain: 'library' },
+            { char: '逆', subdomain: 'reqr' },
+            { char: '彼', subdomain: 'calendar' },
+            { char: '歴', subdomain: 'history-amazon' },
+            { char: '栗', subdomain: 'create' },
+            { char: '新', subdomain: 'new' },
+            { char: '折', subdomain: 'counter' },
+            { char: '地', subdomain: 'maps' },
+            { char: '儀', subdomain: 'gh' }
+        ];
 
-    const subdomains = [
-      "works", "say", "nikki", "kakuka", "taiso", "bft41",
-      "heatmap", "icsfilter", "ytt",
-      "bonyari", "opmlfilter", "okanekazoe", "gyazosum", "gahaku", "bm", "fasterclock",
-      "eiga", "yonda", "new", "sh", "gh", "chat", "editsubdomains", "rururu", "captures", "mail",
-      "playstorerandom", "nitterandom", "idobata", "reqr", "countdown", "create",
-      "vercel", "radio", "bank", "card", "kabu", "books", "denki", "gas", "things", "tasks", "calendar", "maps",
-      "kotomana", "write", "yodobashi", "youtube", "pushbullet","fukaya-cinema","ct21","library","aeon-cinema",
-      "aupay","todo","timestripe","history-amazon","today"
-    ];
-    const input = document.getElementById('searchInput');
-    const suggestions = document.getElementById('suggestions');
-    let selectedIndex = -1;
+        // ランダムに並び替え
+        tiles.sort(() => Math.random() - 0.5);
 
-    input.addEventListener('input', updateSuggestions);
-    input.addEventListener('keydown', handleKeyDown);
+        // グリッドコンテナを取得
+        const container = document.getElementById('grid-container');
 
-    function updateSuggestions() {
-      const query = input.value.toLowerCase();
-      suggestions.innerHTML = '';
-      selectedIndex = -1;
+        // タイルを生成して配置
+        tiles.forEach(tile => {
+            const element = document.createElement('a');
+            element.href = `https://${tile.subdomain}.poet.blue`;
+            element.className = 'tile';
+            element.textContent = tile.char;
 
-      if (query.length === 0) {
-        suggestions.style.display = 'none';
-        return;
-      }
+            // 色相を全域(0-360)に広げ、彩度と明度をパステル調に固定
+            const hue = Math.floor(Math.random() * 360);
+            const saturation = 70 + Math.floor(Math.random() * 20);
+            const lightness = 85 + Math.floor(Math.random() * 10);
+            element.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
-      const matches = subdomains.filter(domain => domain.includes(query))
-        .sort((a, b) => a.indexOf(query) - b.indexOf(query));
+            // コントラスト確保
+            element.style.color = lightness > 70 ? '#333' : '#fff';
 
-      if (matches.length === 0) {
-        suggestions.style.display = 'none';
-        return;
-      }
+            container.appendChild(element);
+        });
 
-      matches.forEach((match) => {
-        const item = document.createElement('div');
-        const matchText = highlightMatch(match, query);
-        item.innerHTML = matchText;
-        item.className = 'suggestion-item';
-        item.addEventListener('click', () => navigateTo(match));
-        suggestions.appendChild(item);
-      });
-
-      suggestions.style.display = 'block';
-      if (matches.length === 1) navigateTo(matches[0]);
-    }
-
-    function highlightMatch(text, query) {
-      const index = text.toLowerCase().indexOf(query);
-      if (index === -1) return text;
-      const start = text.substring(0, index);
-      const match = text.substring(index, index + query.length);
-      const end = text.substring(index + query.length);
-      return `${start}<span class="highlight">${match}</span>${end}`;
-    }
-
-    function handleKeyDown(e) {
-      const items = suggestions.querySelectorAll('.suggestion-item');
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        selectedIndex = (selectedIndex + 1) % items.length;
-        updateSelection();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-        updateSelection();
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (selectedIndex >= 0 && items.length > 0) {
-          navigateTo(items[selectedIndex].textContent);
-        } else if (input.value.trim() !== '') {
-          window.open(`https://www.google.com/search?q=${encodeURIComponent(input.value)}&btnI`);
-        }
-      }
-    }
-
-    function updateSelection() {
-      const items = suggestions.querySelectorAll('.suggestion-item');
-      items.forEach((item, index) => {
-        if (index === selectedIndex) {
-          item.classList.add('selected');
-          input.value = item.textContent;
-        } else {
-          item.classList.remove('selected');
-        }
-      });
-    }
-
-    function navigateTo(subdomain) {
-      const today = new Date().toISOString().split('T')[0];
-      let redirects = JSON.parse(localStorage.getItem('redirects') || '{}');
-      redirects[today] = (redirects[today] || 0) + 1;
-      localStorage.setItem('redirects', JSON.stringify(redirects));
-      updateTitleDisplay();
-      window.open(`https://${subdomain}.poet.blue`);
-    }
-
-    function updateTitleDisplay() {
-      const today = new Date().toISOString().split('T')[0];
-      const redirects = JSON.parse(localStorage.getItem('redirects') || '{}');
-      const count = redirects[today] || 0;
-      document.title = `${count} redirects today | poet.blue`;
-    }
-
-    document.addEventListener('click', (e) => {
-      if (e.target !== input) suggestions.style.display = 'none';
-    });
-  </script>
+        // ウィンドウリサイズ時の調整（必要に応じて）
+        window.addEventListener('resize', () => {
+            // CSSグリッドが自動的に調整するため、特別な処理は不要
+            // 必要に応じてここに追加の調整を記述
+        });
+    </script>
 </body>
-
 </html>
